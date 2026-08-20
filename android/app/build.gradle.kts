@@ -40,11 +40,21 @@ android {
 
     sourceSets {
         getByName("main") {
-            // Bundles scripts/*.sh as Android assets, bottom-autodim.sh in
-            // particular, so AutoDim's Installer can install its own root
-            // service without a second copy of the script to keep in sync.
+            // AutoDim's Installer reads bottom-autodim.sh out of the assets to
+            // put its root service in place, so scripts/ has to be an asset
+            // directory — and pointing at the folder keeps one copy of the
+            // script rather than a second to keep in sync.
             assets.srcDir("../../scripts")
         }
+    }
+
+    androidResources {
+        // ...but a source directory ships whole, and the rest of scripts/ is
+        // documentation you push over adb yourself. The app never opens either
+        // of these, and an APK asking for root should carry nothing it does not
+        // use. Excluded at merge time, which is where AGP 9 allows an asset set
+        // to be narrowed.
+        ignoreAssetsPatterns += listOf("adb-wireless.sh", "media-vol-steps.sh")
     }
 
     signingConfigs {
