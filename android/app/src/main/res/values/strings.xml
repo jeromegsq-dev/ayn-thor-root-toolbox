@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Only what Android itself draws: the launcher label, the quick settings tile
+     and the watch service's notification. Every string the three screens show
+     now lives in Dart, next to the widget that uses it. -->
+<resources>
+    <string name="app_name">AYN Thor Toolbox</string>
+
+    <!-- AutoDim quick settings tile -->
+    <string name="autodim_tile_label">AutoDim</string>
+    <string name="autodim_tile_on">Auto after %1$d s</string>
+    <string name="autodim_tile_off">Off</string>
+
+    <!-- NSO GameCube pad: the quick settings tile and the home screen widget,
+         both of which Android draws itself. -->
+    <string name="nso_tile_label">NSO pad</string>
+    <string name="nso_widget_title">GameCube pad</string>
+    <string name="nso_widget_description">Connects the NSO GameCube pad in one press.</string>
+    <string name="nso_state_off">Not connected</string>
+    <string name="nso_state_scanning">Searching — hold SYNC</string>
+    <string name="nso_state_connecting">Connecting…</string>
+    <string name="nso_state_connected">Connected</string>
+
+    <!-- 4:3 watch service notification -->
+    <string name="aspect_title">4:3 on external screen</string>
+    <string name="aspect_notif_starting">Starting…</string>
+    <string name="aspect_notif_on">External screen connected — 4:3</string>
+    <string name="aspect_notif_off">No external screen — native</string>
+    <string name="aspect_notif_root_failed">superuser denied</string>
+    <string name="aspect_channel_name">Display watch</string>
+</resources>

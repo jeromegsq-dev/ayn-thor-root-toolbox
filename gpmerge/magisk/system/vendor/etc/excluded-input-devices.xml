@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Devices Android's EventHub must ignore.
+
+     The first two entries are the stock AYN Thor list (haptics actuators, which
+     are not input devices). The gamepad entries below are added by the gpmerge
+     module: each physical pad is hidden from Android so that only the single
+     merged pad created by gpmerge is seen, and every controller therefore acts
+     as player 1.
+
+     The AYN mapper (com.odin.mapping) still sees these devices normally: this
+     file only affects Android's own input reader, not the mapper.
+
+     "Odin Controller" and "Xbox Wireless Controller" are the two identities the
+     built-in pad alternates between. Add the exact name of any other controller
+     you want merged; read it with:
+         adb shell su -c 'cat /proc/bus/input/devices'
+     A pad that is not listed here keeps showing up as a separate player. -->
+<devices>
+    <device name="qti-haptics"/>
+    <device name="qcom-hv-haptics"/>
+
+    <device name="Odin Controller"/>
+    <device name="Xbox Wireless Controller"/>
+    <device name="Nintendo Switch Pro Controller"/>
+</devices>

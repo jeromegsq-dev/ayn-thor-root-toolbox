@@ -1,0 +1,7 @@
+# The Gradle wrapper stays committed, as it was before the Flutter move: the
+# build is pinned to one Gradle version and a clone should be enough to build.
+/.gradle
+/captures/
+/local.properties
+GeneratedPluginRegistrant.java
+.cxx/

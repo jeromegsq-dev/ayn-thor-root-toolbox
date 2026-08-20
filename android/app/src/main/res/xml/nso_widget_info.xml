@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- updatePeriodMillis is 0 on purpose: nothing here changes on a clock, only
+     when the pad's state does, and that is pushed from NsoGamepad. -->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/nso_widget_description"
+    android:initialLayout="@layout/nso_widget"
+    android:minWidth="150dp"
+    android:minHeight="40dp"
+    android:previewLayout="@layout/nso_widget"
+    android:resizeMode="horizontal"
+    android:targetCellWidth="3"
+    android:targetCellHeight="1"
+    android:updatePeriodMillis="0"
+    android:widgetCategory="home_screen" />

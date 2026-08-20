@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!-- No standard foreground service type covers "watch for display hotplug",
+         and targetSdk 34+ refuses an untyped foreground service. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- The NSO GameCube pad speaks a proprietary GATT protocol, so it is talked
+         to as a BLE peripheral rather than paired as a HID device. Scanning is
+         flagged neverForLocation: this looks for one controller, never for where
+         the device is, and that keeps the location permission out of it on 12+. -->
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_SCAN"
+        android:usesPermissionFlags="neverForLocation" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <!-- minSdk is 29, so the pre-12 pair still has to be declared — capped, since
+         11 and below is the only place they mean anything. -->
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
+    <uses-permission
+        android:name="android.permission.ACCESS_FINE_LOCATION"
+        android:maxSdkVersion="30" />
+
+    <application
+        android:name="${applicationName}"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true">
+
+        <!-- stateNotNeeded because the screen rebuilds itself from its config
+             files. Landscape and non-resizeable: the top screen of the Thor is
+             16:9 and the layout is built for it. -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:stateNotNeeded="true"
+            android:screenOrientation="landscape"
+            android:resizeableActivity="false"
+            android:theme="@style/LaunchTheme"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:hardwareAccelerated="true"
+            android:windowSoftInputMode="adjustResize">
+            <!-- Shown while the Flutter engine starts, and the window background
+                 behind the Flutter UI afterwards. -->
+            <meta-data
+                android:name="io.flutter.embedding.android.NormalTheme"
+                android:resource="@style/NormalTheme" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <!-- Opens the settings screen on a long press on the tile. -->
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".autodim.DimTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_tile"
+            android:label="@string/autodim_tile_label"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+            <!-- Toggle tile: without this SystemUI draws a chevron and treats it as a
+                 tile that opens a detail screen. -->
+            <meta-data
+                android:name="android.service.quicksettings.TOGGLEABLE_TILE"
+                android:value="true" />
+        </service>
+
+        <!-- The pad, from behind whatever is on screen: the one place a press
+             reaches without leaving a game. -->
+        <service
+            android:name=".nso.NsoTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_nso_tile"
+            android:label="@string/nso_tile_label"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.quicksettings.TOGGLEABLE_TILE"
+                android:value="true" />
+        </service>
+
+        <!-- The same press on a home screen, any launcher's. Not exported: the
+             only broadcasts it takes are the system's own APPWIDGET_UPDATE and
+             the tap PendingIntent it hands out itself, both addressed to this
+             component by name. -->
+        <receiver
+            android:name=".nso.NsoWidget"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/nso_widget_info" />
+        </receiver>
+
+        <service
+            android:name=".aspect.DisplayWatchService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Watches for external display hotplug to switch the mirrored screen between 4:3 and its native ratio." />
+        </service>
+
+        <receiver
+            android:name=".aspect.BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Polls root for the foreground app and swaps the gpmerge profile to
+             match, so a game's own mapping applies before the merger even
+             without the toolbox open. -->
+        <service
+            android:name=".gamepad.GameProfileService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Switches the gamepad remap profile to match whichever game is in front." />
+        </service>
+
+        <receiver
+            android:name=".gamepad.GameProfilesBootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Don't delete the meta-data below.
+             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+
+    </application>
+
+    <queries>
+        <!-- Used by the Flutter engine's ProcessTextPlugin, see
+             https://developer.android.com/training/package-visibility -->
+        <intent>
+            <action android:name="android.intent.action.PROCESS_TEXT" />
+            <data android:mimeType="text/plain" />
+        </intent>
+        <!-- Everything with a launcher entry: without this, package visibility
+             hides most of the device from InstalledApps' picker — down to
+             the handful of packages every app can already see — and a game
+             picker that can only see six apps is not a game picker. This is
+             the narrow form of QUERY_ALL_PACKAGES: it grants exactly what a
+             home screen would show, nothing more. -->
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+        <!-- file_picker's document picker: without this the SAF picker activity
+             itself is invisible past package visibility on API 30+. -->
+        <intent>
+            <action android:name="android.intent.action.GET_CONTENT" />
+            <data android:mimeType="*/*" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.OPEN_DOCUMENT" />
+            <data android:mimeType="*/*" />
+        </intent>
+    </queries>
+</manifest>

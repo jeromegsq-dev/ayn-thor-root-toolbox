@@ -1,0 +1,32 @@
+name: thortoolbox
+description: "Three experimental root tweaks for the AYN Thor, in one app."
+publish_to: 'none'
+
+# versionCode / versionName of the APK.
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.12.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # Tiles can carry a video; stills and GIFs the framework decodes by itself.
+  video_player: ^2.11.0
+  # Lets a tile pick its own artwork from wherever the user keeps it, through
+  # Android's own document picker — no permission beyond what that grants.
+  file_picker: ^10.3.4
+  # The looping menu theme. video_player could technically play audio-only,
+  # but it means asking a video decoder to do a media player's job.
+  audioplayers: ^6.1.0
+  # Battery level and charging state for the status bar — reads Android's own
+  # sticky ACTION_BATTERY_CHANGED broadcast, no permission needed.
+  battery_plus: ^6.2.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

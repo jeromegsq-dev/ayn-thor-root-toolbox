@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Two stacked screens, the bottom one dimmed. Kept inside the 66dp safe zone
+     of the 108dp adaptive icon canvas. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <path
+        android:fillColor="#FF1E88E5"
+        android:pathData="M37.2,32.6h33.6a3.2,3.2 0 0,1 3.2,3.2v15.7a3.2,3.2 0 0,1 -3.2,3.2h-33.6a3.2,3.2 0 0,1 -3.2,-3.2v-15.7a3.2,3.2 0 0,1 3.2,-3.2z" />
+    <path
+        android:fillColor="#FF1E88E5"
+        android:fillAlpha="0.35"
+        android:pathData="M37.2,58.1h33.6a3.2,3.2 0 0,1 3.2,3.2v10.9a3.2,3.2 0 0,1 -3.2,3.2h-33.6a3.2,3.2 0 0,1 -3.2,-3.2v-10.9a3.2,3.2 0 0,1 3.2,-3.2z" />
+</vector>

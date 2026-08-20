@@ -1,0 +1,6 @@
+id=gpmerge
+name=Gamepad Merger (AYN Thor)
+version=v1.0
+versionCode=1
+author=jeromegsq
+description=Merges the built-in pad and any external controller into a single virtual gamepad, so every controller acts as player 1. Hides the source pads from Android via excluded-input-devices.xml without disturbing the AYN mapper.

@@ -1,0 +1,36 @@
+# Flutter / Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+pubspec.lock
+
+# Gradle build output
+build/
+.gradle/
+local.properties
+
+# macOS / IDE / local tooling
+.DS_Store
+.idea/
+.vscode/
+*.iml
+.nodeterm/
+
+# Release signing (never commit)
+keystore.properties
+*.jks
+*.keystore
+
+# Build artifacts, published as GitHub releases instead
+*.apk
+
+# The daemon binaries, built by gpmerge/build.sh and shipped in the Magisk
+# module. Build artifacts, not source: build them yourself, don't trust a blob.
+gpmerge/gpmerge
+gpmerge/magisk/gpmerge
+gpmerge/nsofeed
+gpmerge/magisk/nsofeed
+
+# The live profile file, rewritten by the app at runtime. The documented default
+# ships with the Magisk module, at gpmerge/magisk/gpmerge.conf.
+/gpmerge.conf
