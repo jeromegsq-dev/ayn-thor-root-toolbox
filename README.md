@@ -678,10 +678,18 @@ shasum -a 256 app-release.apk
 apksigner verify --print-certs app-release.apk
 ```
 
+Every APK released here is signed with this certificate:
+
+```
+CN=JeromeGsq, OU=AYN Thor Root Toolbox, O=JeromeGsq, C=FR
+SHA-256  C1:E3:3C:26:81:B2:AD:02:D1:94:01:AA:5B:68:9E:54:B4:AF:37:04:4D:BD:94:01:4E:77:C3:AD:DA:DD:A8:F4
+```
+
 The certificate fingerprint is the one that matters. The checksum only says the
 file arrived intact; the fingerprint says who built it, and it cannot be
-reproduced by anyone without the keystore. If it differs from the published one,
-the APK is not this project's — delete it. An unsigned APK, or one Android
+reproduced by anyone without the keystore. It lives here, in version control,
+rather than only in a release note that can be edited. If the APK you have
+prints anything else, it is not this project's — delete it. An unsigned APK, or one Android
 refuses to install over an existing copy, is the same signal.
 
 Building from source sidesteps the question entirely, which is why it is the
